@@ -1,5 +1,5 @@
 {
-  "name": "@zb/apm-core",
+  "name": "@zb/apm-types",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
