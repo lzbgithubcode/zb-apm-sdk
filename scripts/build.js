@@ -66,9 +66,6 @@ async function runParallel(maxConcurrency, sourceTargets, iteratorFn){
 }
 
 
-
-
-
 /**
  * 编译当个包
  * target 单个包名称
@@ -89,17 +86,15 @@ async function build(target) {
         '-c',
         '--environment',
         `TARGET:${target}`,
-        isBuildTypes ? `TYPES: true`: `TYPES: false`,
-        isSourcemap ? `SOURCE_MAP: true`: `SOURCE_MAP: false`,
-    ];
 
-    console.log('打印命令------', args);
+    ];
+    // isBuildTypes ? `TYPES:true`: `TYPES:false`,
+    console.log('运行命令的参数------',args);
     await runBin('rollup', args);
 
     // 4.是否定义类型
     if(isBuildTypes && pkg.types){
         logInfo(`Roll up 正在 对 ${target} 进行类型定义`);
-
     }
 
 }

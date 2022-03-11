@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node scripts/build.js --watch=true --types=false"
+    "build": "node scripts/build.js web-performance"
   },
   "repository": {
     "type": "git",
@@ -18,11 +18,14 @@
   "homepage": "https://github.com/lzbgithubcode/zb-apm-sdk#readme",
   "devDependencies": {
     "@microsoft/api-extractor": "^7.19.4",
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-node-resolve": "^13.1.3",
     "@rollup/plugin-typescript": "^8.3.1",
     "chalk": "^4.0.0",
     "execa": "^4.1.0",
     "minimist": "^1.2.5",
     "rollup": "^2.70.0",
+    "tslib": "^2.3.1",
     "typescript": "^4.6.2"
   }
 }

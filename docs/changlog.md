@@ -6,9 +6,12 @@
 
 * `rollup`:  打包工具  需要在项目根目录新建`tsconfig.json`, 
 * `@rollup/plugin-typescript`:  打包工具-配套识别ts加载器
+* `tslib`:  @rollup/plugin-typescript插件依赖
 
 * `chalk`: 终端命名颜色
 * `execa`: 执行shell命令
 * `minimist`: 获取命令的参数
+
+
 
 
