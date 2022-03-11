@@ -1,5 +1,5 @@
 const path = require("path");
-const {allTargets, logError, logInfo, getArgv, getPkg, getTargetDirPath} = require("./utils");
+const {allTargets, logError, logInfo, getArgv, getPkg, getTargetDirPath, runBin} = require("./utils");
 
 // 获取参数
 const args = getArgv();
@@ -20,10 +20,11 @@ run();
  */
 async  function run() {
 
-
-
-
-    console.log('获取所有的参数------',args);
+    if(targets && targets.length > 0){
+       await  buildAll(targets);
+    }else {
+      await  buildAll(allTargets);
+    }
 }
 
 
@@ -31,16 +32,36 @@ async  function run() {
  * 编译所有
  * @returns {Promise<void>}
  */
-async function buildAll() {
-
+async function buildAll(pTargets) {
+    const count = require('os').cpus().length;
+    await  runParallel(count, pTargets, build);
 }
 
 
 /**
  *  并发构建
  */
-async function runParallel(){
+async function runParallel(maxConcurrency, sourceTargets, iteratorFn){
 
+    const ret = [];
+    const executing = [];
+    const maxTargetLen = sourceTargets.length;
+     for (const  item of sourceTargets){
+
+         // 增加到微任务队列
+         const p = Promise.resolve().then(()=>  iteratorFn(item));
+         ret.push(p);
+
+         // 超过CPU的核数量
+         if(maxConcurrency <= maxTargetLen){
+             const  e = p.then(()=> executing.splice(executing.indexOf(e), 1))
+             executing.push(e);
+             if(executing.length >= maxConcurrency){
+                 await Promise.race(executing);
+             }
+         }
+     }
+     return  Promise.all(ret);
 
 }
 
@@ -72,9 +93,14 @@ async function build(target) {
         isSourcemap ? `SOURCE_MAP: true`: `SOURCE_MAP: false`,
     ];
 
+    console.log('打印命令------', args);
     await runBin('rollup', args);
 
-    // 4.
+    // 4.是否定义类型
+    if(isBuildTypes && pkg.types){
+        logInfo(`Roll up 正在 对 ${target} 进行类型定义`);
+
+    }
 
 }
 
