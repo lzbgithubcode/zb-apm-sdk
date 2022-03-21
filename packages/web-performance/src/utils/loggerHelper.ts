@@ -5,7 +5,7 @@
  */
 
 
-export const logWarning = (message: string): void=>{
+export const logWarning = (message: string): void => {
     console.warn(message);
 };
 

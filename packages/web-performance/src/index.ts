@@ -12,7 +12,6 @@ class WebPerformance {
             enableReportError = true
         } = config;
 
-
     }
 
     /**

@@ -47,3 +47,9 @@ export interface INetWorkInfo {
     effectiveType?: INetWorkEffectiveType
     rtt?: number
 }
+
+import { IPerformanceNavigationTiming } from "./IPerformanceNavigationTiming.ts";
+
+export {
+    IPerformanceNavigationTiming,
+}

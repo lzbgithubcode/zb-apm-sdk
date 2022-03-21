@@ -4,7 +4,7 @@
  * 功能:
  */
 
-export const isSupportPerformance = (): boolean=>{
+export const isSupportPerformance = (): boolean =>{
     return !!window.performance;
 };
 
