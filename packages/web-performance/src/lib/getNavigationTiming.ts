@@ -60,10 +60,6 @@ const getNavigationTiming = (): Promise<IPerformanceNavigationTiming> | undefine
 
       };
 
-
-
-
-
       return new Promise(resolve => {
 
              // 是否支持性能检测
@@ -86,3 +82,5 @@ const getNavigationTiming = (): Promise<IPerformanceNavigationTiming> | undefine
              }
       });
 }
+
+export {getNavigationTiming};

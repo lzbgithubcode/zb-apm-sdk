@@ -3,7 +3,9 @@
  * 日期: 2022-03-10 11:06
  * 功能:
  */
-import {IConfig} from "./types/index";
+import {IConfig, IPerformanceNavigationTiming} from "./types/index";
+import {getNetworkInfo} from "./lib/getNetworkInfo";
+import {getNavigationTiming} from "./lib/getNavigationTiming";
 
 class WebPerformance {
     constructor(config: IConfig) {
@@ -12,13 +14,17 @@ class WebPerformance {
             enableReportError = true
         } = config;
 
+        this.startMonitor();
     }
 
     /**
      * 开始监听
      */
     startMonitor(){
-
+        getNetworkInfo();
+        getNavigationTiming().then((res) => {
+            console.log('======结果=========',res);
+        });
     }
 
     /**
@@ -28,3 +34,5 @@ class WebPerformance {
 
     }
 }
+
+export {WebPerformance}
