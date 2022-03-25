@@ -7,6 +7,8 @@
      "outDir": "dist",   // 编译之后的目标文件夹
      "listEmittedFiles": true , // 打印出编译后生成文件的名字。
      "listFiles": true,   // 编译过程中打印文件名。
+     "declaration": true,
+    "declarationMap": true,
       "lib": ["esnext", "es6", "dom"]
   },
   "include": [
