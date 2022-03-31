@@ -3,7 +3,7 @@
  * 日期: 2022-03-10 11:06
  * 功能:
  */
-import {IConfig, IPerformanceNavigationTiming} from "./types/index";
+import {IConfig} from "./interfaces/IConfig";
 import {getNetworkInfo} from "./lib/getNetworkInfo";
 import {getNavigationTiming} from "./lib/getNavigationTiming";
 

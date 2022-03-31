@@ -3,7 +3,7 @@
  * 日期: 2022-03-21 18:17
  * 功能:
  */
-import {IPerformanceNavigationTiming} from "../types/index";
+import {interfaces} from "../interfaces/interfaces";
 import {isSupportPerformance, isSupportPerformanceObserver} from "../utils/isSupport";
 import {logWarning} from "../utils/loggerHelper";
 import observe from "./observe";
@@ -11,7 +11,7 @@ import { toFixedFour} from "../utils/calculate";
 
 const   NAVIGATION = "navigation";
 
-const getNavigationTiming = (): Promise<IPerformanceNavigationTiming> | undefined => {
+const getNavigationTiming = (): Promise<interfaces.IPerformanceNavigationTiming> | undefined => {
       if(!isSupportPerformance()){
            logWarning("浏览器不支持performance");
            return;
@@ -41,7 +41,7 @@ const getNavigationTiming = (): Promise<IPerformanceNavigationTiming> | undefine
               unloadEventEnd, //  表征了unload (en-US)事件处理完成时的UNIX时间戳
           } = entry;
           // 返回结果
-          const result:IPerformanceNavigationTiming = {
+          const result:interfaces.IPerformanceNavigationTiming = {
               dns: toFixedFour(domainLookupEnd - domainLookupStart),
               redirect: toFixedFour(redirectEnd - redirectStart),
               tcpConnected: toFixedFour(connectEnd - connectStart),

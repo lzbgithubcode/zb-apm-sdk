@@ -4,10 +4,10 @@
  * 功能:
  */
 
-import { IPageInfo } from "../types/index";
+import { interfaces } from "../interfaces/interfaces";
 import {isSupportNavigator} from "../utils/isSupport";
 
-export const getPageIno = (): IPageInfo =>{
+export const getPageIno = (): interfaces.IPageInfo =>{
      if(!location){
          console.warn('浏览器不支持location');
          return
