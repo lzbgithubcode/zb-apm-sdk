@@ -6,6 +6,7 @@
 import {IConfig} from "./interfaces/IConfig";
 import {getNetworkInfo} from "./lib/getNetworkInfo";
 import {getNavigationTiming} from "./lib/getNavigationTiming";
+import {domDidLoaded} from "./utils/domLife";
 
 class WebPerformance {
     constructor(config: IConfig) {
@@ -21,10 +22,17 @@ class WebPerformance {
      * 开始监听
      */
     startMonitor(){
+
         getNetworkInfo();
-        getNavigationTiming().then((res) => {
-            console.log('======结果=========',res);
+        // dom 加载之后
+        domDidLoaded(()=>{
+            getNavigationTiming().then((res) => {
+                console.log('======结果=========',res);
+            });
+
         });
+
+
     }
 
     /**

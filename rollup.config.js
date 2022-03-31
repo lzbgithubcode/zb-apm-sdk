@@ -52,7 +52,7 @@ const baseConfig = {
      // 输出 require
      output:{
          name:"zb",
-         sourcemap: true,
+         sourcemap: false,
          minifyInternalExports: true,
      },
     plugins:[
