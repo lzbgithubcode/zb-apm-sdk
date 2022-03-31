@@ -11,6 +11,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import sizes from 'rollup-plugin-sizes';
 import cleanup from 'rollup-plugin-cleanup';
+import clear from 'rollup-plugin-clear'
 
 
 if (!process.env.TARGET) {
@@ -19,17 +20,21 @@ if (!process.env.TARGET) {
 
 const masterVersion = require("./package.json").version;
 const packagesDir = path.resolve(__dirname, 'packages');
-const pkgDir = path.resolve(packagesDir, process.env.TARGET);
-const packageDirDist = `${pkgDir}/dist`;
+const packageSubDir = path.resolve(packagesDir, process.env.TARGET);
+const packageDirDist = `${packageSubDir}/dist`;
 
-const resolvePath = p => path.resolve(pkgDir,p);
+const resolvePath = p => path.resolve(packageSubDir,p);
 const pkg = require(resolvePath('package.json'));
 const packageOptions = pkg.buildOptions || {};
-const name = packageOptions.filename || path.basename(pkgDir);
+const name = packageOptions.filename || path.basename(packageSubDir);
 
 // ts插件
 const tsPlugin = typescript({
     tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+    compilerOptions: {
+        lib: ["es5", "es6", "dom"],
+        target: "es5"
+    },
 
 });
 const commonjsPlugin  =  commonjs({
@@ -43,12 +48,14 @@ const sizePlugin = sizes();
 const cleanupPlugin = cleanup({
     comments: 'none'
 });
+const clearPlugin = clear({
+    targets: [packageDirDist]
+})
 
-console.log('==========',pkgDir);
 // 基础配置
 const baseConfig = {
       // 输入
-     input: `${pkgDir}/src/index.ts`,
+     input: `${packageSubDir}/src/index.ts`,
      // 输出 require
      output:{
          name:"zb",
@@ -60,7 +67,8 @@ const baseConfig = {
         cleanupPlugin,
         tsPlugin,
         commonjsPlugin,
-        nodeResolvePlugin
+        nodeResolvePlugin,
+        clearPlugin
     ],
 };
 
@@ -70,7 +78,9 @@ const cjsConfig = {
     output:{
         file: `${packageDirDist}/${name}.js`,
         format: 'cjs',
+        ...baseConfig.output
     },
+    plugins: [...baseConfig.plugins]
 
 };
 
@@ -80,7 +90,10 @@ const iifeConfig = {
     output:{
         file: `${packageDirDist}/${name}.min.js`,
         format: 'iife',
+        name: "zb",
+        ...baseConfig.output
     },
+    plugins: [...baseConfig.plugins]
 };
 
 // 结果是es模块
@@ -89,14 +102,16 @@ const esConfig = {
     output:{
         file: `${packageDirDist}/${name}.es.js`,
         format: 'es',
+        ...baseConfig.output
     },
+    plugins: [...baseConfig.plugins]
 };
 
 const config = {
     cjsConfig,
     iifeConfig,
     esConfig
-}
+};
 
 
 export default [...Object.values(config)];

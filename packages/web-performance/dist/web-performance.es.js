@@ -144,6 +144,20 @@ var getNavigationTiming = function () {
     });
 };
 
+/**
+ * 作者: lzb
+ * 日期: 2022-03-15 20:45
+ * 功能:
+ */
+var domDidLoaded = function (cb) {
+    if (document.readyState === "complete") {
+        setTimeout(cb);
+    }
+    else {
+        window.addEventListener('pageshow', cb);
+    }
+};
+
 var WebPerformance = /** @class */ (function () {
     function WebPerformance(config) {
         config.enableCollectError; config.enableReportError;
@@ -153,9 +167,13 @@ var WebPerformance = /** @class */ (function () {
      * 开始监听
      */
     WebPerformance.prototype.startMonitor = function () {
+        console.log('======开始监听web-performance=========');
         getNetworkInfo();
-        getNavigationTiming().then(function (res) {
-            console.log('======结果=========', res);
+        // dom 加载之后
+        domDidLoaded(function () {
+            getNavigationTiming().then(function (res) {
+                console.log('======结果=========', res);
+            });
         });
     };
     /**

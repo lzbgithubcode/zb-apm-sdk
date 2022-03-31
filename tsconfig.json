@@ -2,30 +2,19 @@
   "compilerOptions": {
      "alwaysStrict":  true, // 以严格模式解析并为每个源文件生成 "use strict"语句
      "module": "esnext",  // 当前代码语法
-     "target": "ES6", // 编译成什么版本
+     "target": "es5", // 编译成什么版本
      "esModuleInterop": true, // js导入ts格式
      "moduleResolution": "node",  // 引入package.json不会报红
      "baseUrl": ".",   // 基础路径
-     "outDir": "dist",   // 编译之后的目标文件夹
      "listEmittedFiles": true , // 打印出编译后生成文件的名字。
      "listFiles": true,   // 编译过程中打印文件名。
-     "declaration": true,
-     "declarationMap": true,
-     "declarationDir": "./dist/packages/", // 类型声明文件的输出目录
-      "lib": ["esnext", "es6", "dom"],
-    "types": ["node"],
-    "allowJs": false, // 不允许编译javascript文件。
-    "typeRoots": [
-      // 指定某个文件夹的声明文件
-      "node_modules/@types"
-    ]
+     "lib": ["esnext", "es6", "dom"],
+     "types": ["node"],
+      "allowJs": false // 不允许编译javascript文件。
   },
-
-//  "include": [
-//    "packages/*/src/",
-//    "example/serve/*"
-//  ],
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": [
+    "packages/*/src/"
+  ],
   "exclude": [
     "node_modules"
   ]

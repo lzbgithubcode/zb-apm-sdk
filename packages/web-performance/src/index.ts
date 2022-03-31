@@ -22,7 +22,7 @@ class WebPerformance {
      * 开始监听
      */
     startMonitor(){
-
+        console.log('======开始监听web-performance=========');
         getNetworkInfo();
         // dom 加载之后
         domDidLoaded(()=>{
