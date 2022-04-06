@@ -1,5 +1,19 @@
 /**
  * 作者: lzb
+ * 日期: 2022-04-06 17:32
+ * 功能:
+ */
+var Config = /** @class */ (function () {
+    function Config(options) {
+        this.allowLog = (options && options.allowLog) || false;
+        this.enableCollectError = (options && options.enableCollectError) || true;
+        this.enableReportError = (options && options.enableReportError) || true;
+    }
+    return Config;
+}());
+
+/**
+ * 作者: lzb
  * 日期: 2022-03-11 18:55
  * 功能:
  */
@@ -158,9 +172,16 @@ var domDidLoaded = function (cb) {
     }
 };
 
+/**
+ * 作者: lzb
+ * 日期: 2022-03-10 11:06
+ * 功能:
+ */
 var WebPerformance = /** @class */ (function () {
     function WebPerformance(config) {
-        config.enableCollectError; config.enableReportError;
+        this.config = config;
+        this.config = new Config(config);
+        console.log('打印默认的配置信息----', this.config);
         this.startMonitor();
     }
     /**

@@ -58,7 +58,7 @@ const baseConfig = {
      input: `${packageSubDir}/src/index.ts`,
      // 输出 require
      output:{
-         name:"zb",
+         name:"ZBApm",
          sourcemap: false,
          minifyInternalExports: true,
      },
@@ -90,7 +90,7 @@ const iifeConfig = {
     output:{
         file: `${packageDirDist}/${name}.min.js`,
         format: 'iife',
-        name: "zb",
+        name: "ZBApm",
         ...baseConfig.output
     },
     plugins: [...baseConfig.plugins]

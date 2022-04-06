@@ -2,18 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>测试web-performance</title>
+    <title>web-performance</title>
 
 </head>
 <body>
-   我是web-performance
+   <span>我是web-performance</span>
 
-   <script   type="text/javascript" src="http://192.168.18.189:3000/packages/web-performance/dist/web-performance.min.js">
-       console.log('我是一个脚本');
-   </script>
+   <script  src=" http://192.168.18.189:3000/packages/web-performance/dist/web-performance.min.js"></script>
 
    <script>
-        console.log('我是脚本B')
+       const p = new ZBApm.WebPerformance({allowLog: true});
+        console.log('我是脚本B',p);
    </script>
 </body>
 </html>

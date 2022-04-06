@@ -3,18 +3,16 @@
  * 日期: 2022-03-10 11:06
  * 功能:
  */
-import {IConfig} from "./interfaces/IConfig";
+import {Config, IConfig} from "./config/config";
 import {getNetworkInfo} from "./lib/getNetworkInfo";
 import {getNavigationTiming} from "./lib/getNavigationTiming";
 import {domDidLoaded} from "./utils/domLife";
 
 class WebPerformance {
-    constructor(config: IConfig) {
-        const {
-            enableCollectError= true,
-            enableReportError = true
-        } = config;
 
+    constructor( private readonly  config: IConfig) {
+        this.config = new Config(config);
+        console.log('打印默认的配置信息----',this.config);
         this.startMonitor();
     }
 

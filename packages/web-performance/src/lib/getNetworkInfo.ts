@@ -20,3 +20,7 @@ export const getNetworkInfo = (): interfaces.INetWorkInfo | undefined => {
         rtt
     }
 };
+
+export const startMonitorNetworkInfo = () => void {
+
+};
