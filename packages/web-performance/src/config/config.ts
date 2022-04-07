@@ -18,7 +18,7 @@ export class Config implements IConfig{
         enableCollectError?: boolean;
         enableReportError?: boolean;
         age?: number;
-       constructor(options: IConfig) {
+       constructor(options?: IConfig) {
           this.allowLog = (options && options.allowLog) || false;
           this.enableCollectError = (options &&options.enableCollectError) || true;
           this.enableReportError = (options && options.enableReportError) || true;

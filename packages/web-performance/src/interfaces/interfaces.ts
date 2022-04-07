@@ -3,6 +3,7 @@
  * 日期: 2022-03-11 18:35
  * 功能:
  */
+import {PerformanceNameType} from "../constants/index";
 
 
 namespace interfaces {
@@ -12,27 +13,40 @@ namespace interfaces {
      */
     export type NetWorkEffectiveType = '5g' | '4g' | '3g' | '2g' | 'slow-2g';
     export interface INetWorkInfo {
-        downlink?: number
-        effectiveType?: NetWorkEffectiveType
-        rtt?: number
+        downlink?: number   // Mb/s为单位的有效带宽
+        effectiveType?: NetWorkEffectiveType  // 网络效果
+        rtt?: number   // 连接的延迟
     }
 
     /**
      * 页面信息
      */
     export interface  IPageInfo{
-        host: string
-        hostname: string
-        href: string
-        protocol: string
-        origin: string
-        port: string
-        pathname: string
-        search: string
-        hash: string
+        host?: string
+        hostname?: string
+        href?: string
+        protocol?: string
+        origin?: string
+        port?: string
+        pathname?: string
+        search?: string
+        hash?: string
         userAgent?: string
-        width: string
-        height: string
+        width?: string
+        height?: string
+    }
+
+    /**
+     * 设备信息
+     */
+    export interface IDeviceInfo {
+        deviceMemory?:number, // 内存大小
+        userAgent?: string, // 浏览器基本信息
+        hardwareConcurrency?: number, //线程数量
+        jsHeapSizeLimit?: string,  // 内存大小限制
+        usedJSHeapSize?: string,  // JS 对象占用的内存,已使用的内存
+        totalJSHeapSize?: string,  // 可使用的内存大小
+
     }
 
 
@@ -102,7 +116,14 @@ namespace interfaces {
         (entry: PerformanceEntry): void
     }
 
-
-
+    /**
+     * 性能指标
+     */
+    export interface IPerformanceMetric {
+        name: PerformanceNameType, // 名称
+        delta: number;  // 当前值与上一次值的相差值，如果是第一次则相差值delta = value
+        value: number;  // 当前值
+        id: string, // 唯一id
+    }
 }
 export {interfaces};

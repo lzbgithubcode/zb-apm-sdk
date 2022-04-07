@@ -6,6 +6,7 @@
 
 import { interfaces } from "../interfaces/interfaces";
 import {isSupportNavigator} from "../utils/isSupport";
+import {Config, IConfig} from "../config/config";
 
 export const getPageIno = (): interfaces.IPageInfo =>{
      if(!location){
@@ -17,7 +18,6 @@ export const getPageIno = (): interfaces.IPageInfo =>{
     let userAgent = "";
     if(isSupportNavigator()){
         userAgent = 'userAgent' in navigator ? navigator.userAgent : '';
-        return
     }
     return  {
         host,
@@ -34,4 +34,14 @@ export const getPageIno = (): interfaces.IPageInfo =>{
         height: `${height}`
     }
 };
+
+export const startMonitorPageInfo = (config: IConfig = new Config())=>{
+
+    const pageInfo: interfaces.IPageInfo = getPageIno();
+
+    console.log('页面信息------',pageInfo, '配置信息--------',config);
+};
+
+
+
 

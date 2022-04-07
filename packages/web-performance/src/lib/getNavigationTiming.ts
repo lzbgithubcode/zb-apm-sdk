@@ -8,10 +8,11 @@ import {isSupportPerformance, isSupportPerformanceObserver} from "../utils/isSup
 import {logWarning} from "../utils/loggerHelper";
 import observe from "./observe";
 import { toFixedFour} from "../utils/calculate";
+import {Config, IConfig} from "../config/config";
 
 const   NAVIGATION = "navigation";
 
-const getNavigationTiming = (): Promise<interfaces.IPerformanceNavigationTiming> | undefined => {
+export const getNavigationTiming = (): Promise<interfaces.IPerformanceNavigationTiming> | undefined => {
       if(!isSupportPerformance()){
            logWarning("浏览器不支持performance");
            return;
@@ -83,4 +84,9 @@ const getNavigationTiming = (): Promise<interfaces.IPerformanceNavigationTiming>
       });
 }
 
-export {getNavigationTiming};
+export const startMonitorNavigationTiming = (config: IConfig = new Config()):void => {
+    // 监听的结果
+    getNavigationTiming().then((res) => {
+        console.log('======结果=========',res);
+    });
+};

@@ -29,9 +29,9 @@ export const toFixedFour = (num: number): number =>{
  * 字节Byte -> MB
  * @param bytes
  */
-export const toMB = (bytes: number): number | null => {
-      if(typeof  bytes!== 'number'){
-          return  null;
+export const toMB = (bytes: number | null): number => {
+      if(typeof bytes !== 'number'){
+          return  0;
       }
       return toFixedFour((bytes / Math.pow(1024, 2)));
 }

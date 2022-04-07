@@ -4,9 +4,10 @@
  * 功能:
  */
 import {Config, IConfig} from "./config/config";
-import {getNetworkInfo} from "./lib/getNetworkInfo";
-import {getNavigationTiming} from "./lib/getNavigationTiming";
+
+import {startMonitorNavigationTiming} from "./lib/getNavigationTiming";
 import {domDidLoaded} from "./utils/domLife";
+import {startMonitorBaseInfo} from "./lib/getBaseInfo";
 
 class WebPerformance {
 
@@ -21,13 +22,10 @@ class WebPerformance {
      */
     startMonitor(){
         console.log('======开始监听web-performance=========');
-        getNetworkInfo();
+        startMonitorBaseInfo(this.config);
         // dom 加载之后
         domDidLoaded(()=>{
-            getNavigationTiming().then((res) => {
-                console.log('======结果=========',res);
-            });
-
+            startMonitorNavigationTiming( this.config);
         });
 
 

@@ -5,9 +5,10 @@
  */
 import {interfaces} from "../interfaces/interfaces"
 import {isSupportNavigator} from "../utils/isSupport";
+import {Config, IConfig} from "../config/config";
 
 
-export const getNetworkInfo = (): interfaces.INetWorkInfo | undefined => {
+export const getNetworkInfo = ():interfaces.INetWorkInfo=> {
     if(!isSupportNavigator()){
         console.warn('浏览器不支持navigator');
         return
@@ -21,6 +22,13 @@ export const getNetworkInfo = (): interfaces.INetWorkInfo | undefined => {
     }
 };
 
-export const startMonitorNetworkInfo = () => void {
+/**
+ * 开始监听网络信息
+ * @param config
+ */
+export const startMonitorNetworkInfo = (config : IConfig = new Config()):void => {
+      // 获取网络信息
+     const  netInfo: interfaces.INetWorkInfo =  getNetworkInfo();
 
+    console.log('网络信息------',netInfo, '配置信息--------',config);
 };
