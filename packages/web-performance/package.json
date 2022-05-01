@@ -2,14 +2,19 @@
   "name": "@zb/apm-web-performace",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/web-performance.min.js",
+  "module": "dist/web-performance.es.js",
+  "types": "dist/web-performace.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "types": "dist/web-performace.d.ts",
+
   "keywords": [],
   "author": "",
   "license": "ISC",
+   "files": [
+     "dist"
+   ],
   "devDependencies": {
 
   }

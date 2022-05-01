@@ -87,6 +87,6 @@ export const getNavigationTiming = (): Promise<interfaces.IPerformanceNavigation
 export const startMonitorNavigationTiming = (config: IConfig = new Config()):void => {
     // 监听的结果
     getNavigationTiming().then((res) => {
-        console.log('======结果=========',res);
+        console.log('======NavigationTiming=========',res);
     });
 };

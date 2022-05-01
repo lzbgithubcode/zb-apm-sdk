@@ -125,5 +125,13 @@ namespace interfaces {
         value: number;  // 当前值
         id: string, // 唯一id
     }
+
+    /**
+     * 获取性能指标
+     */
+    export interface IPerformance {
+        FP ?: IPerformanceMetric,
+
+    }
 }
 export {interfaces};

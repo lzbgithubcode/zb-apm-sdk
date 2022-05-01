@@ -11,6 +11,7 @@
      "lib": ["esnext", "es6", "dom"],
      "types": ["node"],
       "allowJs": false // 不允许编译javascript文件。
+//      "declaration": true,  // 是否自动创建类型声明文件
   },
   "include": [
     "packages/*/src/"
