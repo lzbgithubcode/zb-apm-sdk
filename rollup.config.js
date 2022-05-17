@@ -33,8 +33,12 @@ const tsPlugin = typescript({
     tsconfig: path.resolve(__dirname, 'tsconfig.json'),
     compilerOptions: {
         lib: ["es5", "es6", "dom"],
-        target: "es5"
+        target: "es5",
+        module: "ESNext"
+        // declarationDir: packageDirDist, // 类型声明文件的输出目录
+
     },
+
 
 });
 const commonjsPlugin  =  commonjs({

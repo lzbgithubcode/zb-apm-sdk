@@ -10,11 +10,8 @@ import { interfaces } from "../interfaces/interfaces";
 import IPerformanceMetric = interfaces.IPerformanceMetric;
 import { isSupportPerformance, isSupportPerformanceObserver } from "../utils/isSupport";
 import { logWarning } from "../utils/loggerHelper";
-import { initMetric } from "../utils/initMetric";
-import { toFixedFour } from "../utils/calculate";
-import { getFirstHiddenTime } from "../utils/visibilityWatcher";
-import { resolve } from "path";
-
+import { initMetric } from "../utils/initMetric"; import { getFirstHiddenTime } from "../utils/pageEventListener";
+import { retainToFixed, toFixedFour } from "../utils/calculate";
 
 /**
  *  监听性能指标
@@ -26,55 +23,45 @@ export const startMonitorPerformance = (config: IConfig = new Config()): void =>
 };
 
 /**
- * 首次绘制 - 白屏时间
+ *  获取首次渲染的FP - 白屏时间
  */
-export const getFP = (): Promise<IPerformanceMetric> => {
+export const getFP = (): Promise<interfaces.IPerformanceMetric> | undefined => {
+    if (!isSupportPerformance()) {
+        logWarning("浏览器不支持performance");
+        return;
+    }
+    const fpMetric: interfaces.IPerformanceMetric = initMetric(PerformanceNameType.FP);
+    return new Promise<interfaces.IPerformanceMetric>((resolve, reject) => {
 
-    // 1.初始化性能参数
-    const fp = PerformanceNameType.FP;
-    const fp_metric: IPerformanceMetric = initMetric(fp);
-
-    return new Promise<IPerformanceMetric>((resolve, reject) => {
-        if (!isSupportPerformanceObserver()) {
-            if (!isSupportPerformance()) {
-                reject(new Error('浏览器不支持Performance'));
-            } else {
-
-                // 1. 如果只是支持performance，不支持PerformanceObserver 获取性能值
-                const entry: PerformanceEntryList = performance.getEntriesByName(fp);
-                if (entry && entry.length > 0) {
-                    const fp_entry: PerformanceEntry = entry[0];
-                    fp_metric.value = toFixedFour(fp_entry.startTime);
-                    resolve(fp_metric);
-                } else {
-                    reject(new Error('浏览器不支持FP'))
-                }
-            }
-        } else {
-
-            // 浏览值支持FP
+        // 如果支持观察者
+        if (isSupportPerformanceObserver()) {
             const entryHandler = (entry: PerformanceEntry) => {
-                if (entry.name === fp) {
-                    // 断开收集
+                if (entry.entryType === fpMetric.name) {
                     if (po) {
-                        po.disconnect();
-                    }
-                    // 获取信息
-                    if (entry.startTime < getFirstHiddenTime().timeStamp) {
-                        fp_metric.value = toFixedFour(entry.startTime);
-                        resolve(fp_metric);
+                        po.disconnect()
                     }
 
+                    if (entry.startTime < getFirstHiddenTime().timestamp) {
+                        fpMetric.value = retainToFixed(entry.startTime, 2);
+                        resolve(fpMetric);
+                    }
                 }
+
             };
-            const po = observe(fp, entryHandler);
+            const po = observe("paint", entryHandler);
+        } else {
+            const entry = window.performance
+                && performance.getEntriesByName
+                && performance.getEntriesByName(fpMetric.name)[0];
+
+            fpMetric.value = retainToFixed(entry.startTime, 2);
+            resolve(fpMetric);
         }
-
-
     });
+};
 
 
-}
+
 /**
  * 首次内容绘制
  */

@@ -125,18 +125,11 @@ namespace interfaces {
         value: number;  // 当前值
         id: string, // 唯一id
     }
-
-    /**
-     * 事件回调函数
-     */
-    export interface IEventCallBack {
-        (event: Event): void
-    }
-    /**
-     * 当页面从历史记录中回显的事件
-     */
-    export interface IPageCacheEventCallBack {
-        (event: PageTransitionEvent): void
+    /*
+    * 获取性能指标
+    */
+    export interface IPerformance {
+        FP?: IPerformanceMetric,
     }
 }
 export { interfaces };
