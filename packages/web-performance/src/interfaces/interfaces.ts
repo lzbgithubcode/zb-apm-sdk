@@ -3,7 +3,7 @@
  * 日期: 2022-03-11 18:35
  * 功能:
  */
-import {PerformanceNameType} from "../constants/index";
+import { PerformanceNameType } from "../constants/index";
 
 
 namespace interfaces {
@@ -21,7 +21,7 @@ namespace interfaces {
     /**
      * 页面信息
      */
-    export interface  IPageInfo{
+    export interface IPageInfo {
         host?: string
         hostname?: string
         href?: string
@@ -40,7 +40,7 @@ namespace interfaces {
      * 设备信息
      */
     export interface IDeviceInfo {
-        deviceMemory?:number, // 内存大小
+        deviceMemory?: number, // 内存大小
         userAgent?: string, // 浏览器基本信息
         hardwareConcurrency?: number, //线程数量
         jsHeapSizeLimit?: string,  // 内存大小限制
@@ -61,7 +61,7 @@ namespace interfaces {
         /**
          * tcp建立链接时间 connectEnd - connectStart
          */
-        tcpConnected?:number,  // connectEnd - connectStart
+        tcpConnected?: number,  // connectEnd - connectStart
         /**
          * ssl连接时间 connectEnd - secureConnectionStart
          */
@@ -79,7 +79,7 @@ namespace interfaces {
         /**
          * dom解析时间 domInteractive - responseEnd
          */
-        domParse?:number,
+        domParse?: number,
 
         /**
          * dom内容加载（同步js的加载） - 同步的脚步 domContentLoadedEventEnd - domInteractive
@@ -89,7 +89,7 @@ namespace interfaces {
         /**
          * 资源加载时间 loadEventStart - domContentLoadedEventEn
          */
-        resourceLoaded?:number, //  loadEventStart - domContentLoadedEventEnd
+        resourceLoaded?: number, //  loadEventStart - domContentLoadedEventEnd
         /**
          * 页面加载时间  loadEventStart - fetchStart 首次渲染时间+DOM解析耗时+同步JS执行+资源加载耗时
          */
@@ -125,5 +125,18 @@ namespace interfaces {
         value: number;  // 当前值
         id: string, // 唯一id
     }
+
+    /**
+     * 事件回调函数
+     */
+    export interface IEventCallBack {
+        (event: Event): void
+    }
+    /**
+     * 当页面从历史记录中回显的事件
+     */
+    export interface IPageCacheEventCallBack {
+        (event: PageTransitionEvent): void
+    }
 }
-export {interfaces};
+export { interfaces };

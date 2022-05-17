@@ -7,7 +7,8 @@ import {interfaces} from "../interfaces/interfaces";
 import {generalUniqueId} from "./uniqueId";
 
 
-export const initMetric = (name: interfaces.IPerformanceMetric['name'], value?: number) => {
+
+export const initMetric = (name: interfaces.IPerformanceMetric['name'], value?: number): interfaces.IPerformanceMetric => {
     return {
         name,
         value: typeof value === 'undefined' ? -1 : value,
