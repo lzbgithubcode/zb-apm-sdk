@@ -10,8 +10,10 @@ import { interfaces } from "../interfaces/interfaces";
 import IPerformanceMetric = interfaces.IPerformanceMetric;
 import { isSupportPerformance, isSupportPerformanceObserver } from "../utils/isSupport";
 import { logWarning } from "../utils/loggerHelper";
-import { initMetric } from "../utils/initMetric"; import { getFirstHiddenTime } from "../utils/pageEventListener";
+import { initMetric } from "../utils/initMetric";
+import { getFirstHiddenTime, onCachePageShow, onHidden } from "../utils/pageEventListener";
 import { retainToFixed, toFixedFour } from "../utils/calculate";
+
 
 /**
  *  监听性能指标
@@ -95,7 +97,7 @@ export const getFCP = (): Promise<IPerformanceMetric> => {
                         po.disconnect();
                     }
                     // 获取信息
-                    if (entry.startTime < getFirstHiddenTime().timeStamp) {
+                    if (entry.startTime < getFirstHiddenTime().timestamp) {
                         fcp_metric.value = toFixedFour(entry.startTime);
                         resolve(fcp_metric);
                     }
@@ -106,3 +108,50 @@ export const getFCP = (): Promise<IPerformanceMetric> => {
         }
     });
 }
+/**
+ * First Input Delay 首次输入延迟 (FID)
+ * FID 测量从用户第一次与页面交互（例如当他们单击链接、点按按钮或使用由 JavaScript 驱动的自定义控件）
+ * 直到浏览器对交互作出响应，并实际能够开始处理事件处理程序所经过的时间。
+ */
+export const getFID = (): Promise<IPerformanceMetric> => {
+    // 1.初始化性能参数
+    const fid = PerformanceNameType.FID;
+    const fid_metric: IPerformanceMetric = initMetric(fid);
+
+    if (!isSupportPerformanceObserver()) {
+        logWarning("浏览器不支持PerformanceObserver,暂不支持收集FID")
+        return;
+    }
+
+    // 2. 返回promise
+    return new Promise<IPerformanceMetric>((resolve, reject) => {
+
+        const entryHandler = (entry: PerformanceEventTiming) => {
+            if (entry.name === fid) {
+                // 获取信息
+                if (entry.startTime < getFirstHiddenTime().timestamp) {
+                    // 断开收集
+                    if (po) {
+                        po.disconnect();
+                    }
+                    fid_metric.value = toFixedFour(entry.processingStart - entry.startTime);
+                    resolve(fid_metric);
+                }
+            }
+        };
+
+        const po = observe(fid, entryHandler);
+        if (po) {
+            onHidden(() => {
+                if (po.takeRecords) {
+                    po.takeRecords().map(entryHandler)
+                }
+                po.disconnect();
+            }, true);
+        }
+    });
+}
+
+
+
+
