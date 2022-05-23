@@ -3,30 +3,39 @@
  * 日期: 2022-03-10 11:06
  * 功能:
  */
-import {Config, IConfig} from "./config/config";
+import { Config, IConfig } from "./config/config";
 
-import {startMonitorNavigationTiming} from "./lib/getNavigationTiming";
-import {domDidLoaded} from "./utils/domLife";
-import {startMonitorBaseInfo} from "./lib/getBaseInfo";
+import { startMonitorNavigationTiming } from "./lib/getNavigationTiming";
+import { domDidLoaded } from "./utils/domLife";
+import { startMonitorBaseInfo } from "./lib/getBaseInfo";
+import { startMonitorPerformance } from "./lib/getPerformance";
 
 class WebPerformance {
 
-    constructor( private readonly  config: IConfig) {
+    constructor(private readonly config: IConfig) {
         this.config = new Config(config);
-        console.log('打印默认的配置信息----',this.config);
+        console.log('打印默认的配置信息----', this.config);
         this.startMonitor();
     }
 
     /**
      * 开始监听
      */
-    startMonitor(){
+    startMonitor() {
         console.log('======开始监听web-performance=========');
         startMonitorBaseInfo(this.config);
+
+        // 开启性能指标监听
+        startMonitorPerformance(this.config);
+
         // dom 加载之后
-        domDidLoaded(()=>{
-            startMonitorNavigationTiming( this.config);
+        domDidLoaded(() => {
+            startMonitorNavigationTiming(this.config);
         });
+
+
+
+
 
 
     }
@@ -34,9 +43,9 @@ class WebPerformance {
     /**
      * 停止监听
      */
-    stopMonitor(){
+    stopMonitor() {
 
     }
 }
 
-export {WebPerformance}
+export { WebPerformance }

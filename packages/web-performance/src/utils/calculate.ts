@@ -7,22 +7,22 @@
 /**
  * 保留几位小数
  */
-export const retainToFixed = (num: number | string, digits: number): number =>{
-    if(typeof num === "string"){
+export const retainToFixed = (num: number | string, digits: number): number => {
+    if (typeof num === "string") {
         num = parseFloat(num);
     }
     try {
-        return  parseFloat(num.toFixed(digits));
-    }catch (e) {
-        return  num;
+        return parseFloat(num.toFixed(digits));
+    } catch (e) {
+        return num;
     }
 };
 /**
  *  保留4位小数
  * @param num
  */
-export const toFixedFour = (num: number): number =>{
-    return  retainToFixed(num, 4);
+export const toFixedFour = (num: number): number => {
+    return retainToFixed(num, 4);
 };
 
 /**
@@ -30,8 +30,9 @@ export const toFixedFour = (num: number): number =>{
  * @param bytes
  */
 export const toMB = (bytes: number | null): number => {
-      if(typeof bytes !== 'number'){
-          return  0;
-      }
-      return toFixedFour((bytes / Math.pow(1024, 2)));
+    if (typeof bytes !== 'number') {
+        return 0;
+    }
+    return toFixedFour((bytes / Math.pow(1024, 2)));
 }
+

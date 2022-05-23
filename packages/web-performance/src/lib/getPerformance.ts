@@ -13,6 +13,7 @@ import { logWarning } from "../utils/loggerHelper";
 import { initMetric } from "../utils/initMetric";
 import { getFirstHiddenTime, onCachePageShow, onHidden } from "../utils/pageEventListener";
 import { retainToFixed, toFixedFour } from "../utils/calculate";
+import { domDidLoaded } from "../utils/domLife";
 
 
 /**
@@ -21,7 +22,22 @@ import { retainToFixed, toFixedFour } from "../utils/calculate";
  */
 export const startMonitorPerformance = (config: IConfig = new Config()): void => {
 
+    // 最大内容绘制
+    getLCP();
 
+    addEventListener("pageShow", () => {
+        // 获取首次渲染的FP
+        getFP();
+
+        // 获取首次内容绘制
+        getFCP();
+
+    });
+
+    domDidLoaded(() => {
+        // 获取FID
+        getFID();
+    })
 };
 
 /**
@@ -61,7 +77,6 @@ export const getFP = (): Promise<interfaces.IPerformanceMetric> | undefined => {
         }
     });
 };
-
 
 
 /**
@@ -151,6 +166,60 @@ export const getFID = (): Promise<IPerformanceMetric> => {
         }
     });
 }
+
+/**
+ * LCP Largest Contentful Paint 最大内容绘制 (LCP)
+ * 
+ */
+export const getLCP = (): Promise<IPerformanceMetric> => {
+    // 1.初始化性能参数
+    const lcp = PerformanceNameType.LCP;
+    const lcp_metric: IPerformanceMetric = initMetric(lcp);
+
+    if (!isSupportPerformanceObserver()) {
+        logWarning("浏览器不支持PerformanceObserver,暂不支持收集FID")
+        return;
+    }
+    // 2. 返回promise
+    return new Promise<IPerformanceMetric>((resolve, reject) => {
+
+        const entryHandler = (entry: PerformanceEntry) => {
+            if (entry.name === lcp) {
+                // 获取信息
+                if (entry.startTime < getFirstHiddenTime().timestamp) {
+                    // 断开收集
+                    if (po) {
+                        po.disconnect();
+                    }
+                    lcp_metric.value = toFixedFour(entry.startTime);
+                    resolve(lcp_metric);
+                }
+            }
+        };
+
+        const po = observe(lcp, entryHandler);
+        if (po) {
+            const stopListening = () => {
+                if (po.takeRecords) {
+                    po.takeRecords().map(entryHandler)
+                }
+                po.disconnect();
+            }
+
+
+
+            ['keydown', 'click'].forEach((type) => {
+                addEventListener(type, stopListening, { once: true, capture: true });
+            });
+            onHidden(stopListening, true);
+        }
+    });
+
+}
+
+
+
+
 
 
 
