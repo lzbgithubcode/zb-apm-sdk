@@ -21,5 +21,7 @@
 参考: https://github.com/GoogleChrome/web-vitals
 
 
+#### 2022-05-34 pnpm包管理使用
+https://pnpm.io/zh/installation
 
 
