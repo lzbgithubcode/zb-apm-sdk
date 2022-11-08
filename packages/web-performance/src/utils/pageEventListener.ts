@@ -1,12 +1,12 @@
 /**
  *   页面事件监听
  */
-import { sysInterfaces } from "../interfaces/sysInterfaces";
+import { IOnHiddenCallback, IOnShowCallback } from "../types/interfaces";
 
 /**
  * 页面隐藏事件监听
  */
-export const onHidden = (cb: sysInterfaces.IOnHiddenCallback, once: boolean = false) => {
+export const onHidden = (cb: IOnHiddenCallback, once: boolean = false) => {
     const onHiddenOrPageHide = (event: Event) => {
         if (event.type == "pagehide" || document.visibilityState === 'hidden') {
             cb(event);
@@ -29,7 +29,7 @@ export const onHidden = (cb: sysInterfaces.IOnHiddenCallback, once: boolean = fa
  * 页面缓存中加载显示
  * @param cb
  */
-export const onCachePageShow = (cb: sysInterfaces.IOnShowCallback) => {
+export const onCachePageShow = (cb: IOnShowCallback) => {
 
     addEventListener('pageshow', (event: PageTransitionEvent) => {
         // 标记记页面是否从缓存（Backforward Cache）中加载

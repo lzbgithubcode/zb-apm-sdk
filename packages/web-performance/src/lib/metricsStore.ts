@@ -1,5 +1,5 @@
 import { PerformanceNameType } from "../constants";
-import { interfaces } from "../interfaces/interfaces";
+import { IPerformanceMetric } from "../types/interfaces";
 
 /**
  * 作者: lzb
@@ -7,10 +7,10 @@ import { interfaces } from "../interfaces/interfaces";
  * 功能:
  */
 export class MetricsStore {
-  private stateMap: Map<PerformanceNameType | string, interfaces.IPerformanceMetric>
+  private stateMap: Map<PerformanceNameType | string, IPerformanceMetric>
 
   constructor() {
-    this.stateMap = new Map<PerformanceNameType | string, interfaces.IPerformanceMetric>();
+    this.stateMap = new Map<PerformanceNameType | string, IPerformanceMetric>();
   }
 
   /**
@@ -18,13 +18,13 @@ export class MetricsStore {
    * @param key  PerformanceNameType | string 性能指标的key
    * @param value  IPerformanceMetric 性能指标对象
    */
-  set(key: PerformanceNameType | string, value: interfaces.IPerformanceMetric) {
+  set(key: PerformanceNameType | string, value: IPerformanceMetric) {
     if (!key && key.length > 0) {
       this.stateMap.set(key, value);
     }
 
   }
-  get(key: PerformanceNameType | string): interfaces.IPerformanceMetric {
+  get(key: PerformanceNameType | string): IPerformanceMetric {
     return this.stateMap.get(key);
   }
 

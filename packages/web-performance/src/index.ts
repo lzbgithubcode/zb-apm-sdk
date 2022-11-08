@@ -5,7 +5,7 @@
  */
 import { Config, IConfig } from "./config/config";
 
-import { startMonitorNavigationTiming } from "./lib/getNavigationTiming";
+import { startMonitorNavigationTiming } from "./metrics/getNavigationTiming";
 import { domDidLoaded } from "./utils/domLife";
 import { startMonitorBaseInfo } from "./lib/getBaseInfo";
 import { startMonitorPerformance } from "./lib/getPerformance";
@@ -32,12 +32,6 @@ class WebPerformance {
         domDidLoaded(() => {
             startMonitorNavigationTiming(this.config);
         });
-
-
-
-
-
-
     }
 
     /**

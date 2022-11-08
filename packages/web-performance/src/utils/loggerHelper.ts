@@ -9,3 +9,7 @@ export const logWarning = (message: string): void => {
     console.warn(message);
 };
 
+export const logError = (message: string): void => {
+    console.error(message);
+};
+
