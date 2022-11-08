@@ -13,7 +13,7 @@ export const getNetworkInfo = (): INetWorkInfo | undefined => {
         console.warn('浏览器不支持navigator');
         return
     }
-    const connection = (navigator['connection'] || navigator['mozConnection'] || navigator['webkitConnection'] || {}) as interfaces.INetWorkInfo;
+    const connection = (navigator['connection'] || navigator['mozConnection'] || navigator['webkitConnection'] || {}) as INetWorkInfo;
     const { downlink, effectiveType, rtt } = connection;
     return {
         downlink,
