@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "build": "node scripts/build.js web-performance",
     "start": "nodemon -e  --exec node example/serve/index.js"
   },

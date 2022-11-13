@@ -1,5 +1,5 @@
 {
-  "name": "@zb/apm-web-browser",
+  "name": "@zb/apm-web-error",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,7 +10,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-
-  }
+  "devDependencies": {}
 }

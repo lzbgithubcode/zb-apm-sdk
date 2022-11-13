@@ -11,7 +11,9 @@ import observe from "../lib/observe";
 
 
 /**
- * 首次内容绘制
+ * @description:  首次内容绘制
+ * @param {*} void
+ * @return {type} Promise   
  */
 const fetchFCP = (): Promise<PerformanceEntry> => {
   // 1.初始化性能参数
