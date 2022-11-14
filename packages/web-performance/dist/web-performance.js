@@ -39,6 +39,9 @@ var isSupportPerformanceObserver = function () {
 var logWarning = function (message) {
     console.warn(message);
 };
+var logError = function (message) {
+    console.error(message);
+};
 
 function observe (type, callback) {
     var _a;
@@ -161,7 +164,7 @@ var startMonitorNavigationTiming = function (config) {
     if (config === void 0) { config = new Config(); }
     // 监听的结果
     getNavigationTiming().then(function (res) {
-        console.log('======结果=========', res);
+        console.log('======NavigationTiming=========', res);
     });
 };
 
@@ -179,6 +182,10 @@ var domDidLoaded = function (cb) {
     }
 };
 
+/**
+ * 获取设备信息
+ * @returns  IDeviceInfo | undefined
+ */
 var getDeviceInfo = function () {
     if (!isSupportNavigator()) {
         console.warn('浏览器不支持navigator');
@@ -213,7 +220,7 @@ var startMonitorDeviceInfo = function (config) {
 /**
  * 作者: lzb
  * 日期: 2022-03-15 20:28
- * 功能:
+ * 功能: 页面基础信息
  */
 var getPageIno = function () {
     if (!location) {
@@ -292,6 +299,316 @@ var startMonitorBaseInfo = function (config) {
 
 /**
  * 作者: lzb
+ * 日期: 2022-04-07 18:48
+ * 功能:
+ */
+/**
+ * 生成unique id
+ */
+var generalUniqueId = function () {
+    return "apm-v1-".concat(Date.now(), "-").concat(Math.floor(Math.random() * (9e12 - 1)) + 1e12);
+};
+
+/**
+ *  初始化指标对象
+ */
+var initMetric = function (name, value) {
+    return {
+        name: name,
+        value: typeof value === 'undefined' ? -1 : value,
+        delta: 0,
+        id: generalUniqueId(),
+    };
+};
+
+/**
+ * 作者: lzb
+ * 日期: 2022-03-11 18:39
+ * 功能:
+ */
+var PerformanceNameType;
+(function (PerformanceNameType) {
+    PerformanceNameType["NT"] = "navigation-timing";
+    PerformanceNameType["FP"] = "first-paint";
+    PerformanceNameType["FCP"] = "first-contentful-paint";
+    PerformanceNameType["LCP"] = "largest-contentful-paint";
+    PerformanceNameType["FID"] = "first-input";
+    PerformanceNameType["FPS"] = "fps";
+    PerformanceNameType["TTFB"] = "TTFB";
+})(PerformanceNameType || (PerformanceNameType = {}));
+
+/**
+ * 页面隐藏事件监听
+ */
+var onHidden = function (cb, once) {
+    if (once === void 0) { once = false; }
+    var onHiddenOrPageHide = function (event) {
+        if (event.type == "pagehide" || document.visibilityState === 'hidden') {
+            cb(event);
+            // 如果只是监听一次
+            if (once) {
+                removeEventListener('visibilitychange', onHiddenOrPageHide, true);
+                removeEventListener("pagehide", onHiddenOrPageHide, true);
+            }
+        }
+    };
+    // 当其选项卡的内容变得可见或被隐藏时，会在文档上触发
+    addEventListener('visibilitychange', onHiddenOrPageHide, true);
+    // 当浏览器在显示与会话历史记录不同的页面的过程中隐藏当前页面时, pagehide(页面隐藏)事件会被发送到一个
+    addEventListener("pagehide", onHiddenOrPageHide, true);
+};
+var firstHiddenTime = document.visibilityState === 'hidden' ? 0 : Infinity;
+/**
+ * 获取第一次隐藏时间
+ */
+var getFirstHiddenTime = function () {
+    onHidden(function (event) {
+        firstHiddenTime = event.timeStamp;
+    }, true);
+    return {
+        get timestamp() {
+            return firstHiddenTime;
+        }
+    };
+};
+
+/**
+ *  获取首次渲染的FP - 白屏时间
+ */
+var fetchFP = function () {
+    if (!isSupportPerformance()) {
+        logWarning("浏览器不支持performance");
+        return;
+    }
+    var fp = PerformanceNameType.FP;
+    return new Promise(function (resolve, reject) {
+        // 如果支持观察者
+        if (isSupportPerformanceObserver()) {
+            var entryHandler = function (entry) {
+                if (entry.entryType === fp) {
+                    if (po_1) {
+                        po_1.disconnect();
+                    }
+                    if (entry.startTime < getFirstHiddenTime().timestamp) {
+                        resolve(entry);
+                    }
+                }
+            };
+            var po_1 = observe("paint", entryHandler);
+        }
+        else {
+            var entry = window.performance
+                && performance.getEntriesByName
+                && performance.getEntriesByName(fp)[0];
+            resolve(entry);
+        }
+    });
+};
+/**
+ * 获取FP指标
+ */
+var getFP = function () {
+    var _a;
+    (_a = fetchFP()) === null || _a === void 0 ? void 0 : _a.then(function (entry) {
+        // 创建指标对象
+        initMetric(PerformanceNameType.FP);
+        retainToFixed(entry.startTime, 2);
+        // 获取到指标对象
+    }).catch(function (error) {
+        logError(error);
+    });
+};
+
+/**
+ * @description:  首次内容绘制
+ * @param {*} void
+ * @return {type} Promise
+ */
+var fetchFCP = function () {
+    // 1.初始化性能参数
+    var fcp = PerformanceNameType.FCP;
+    return new Promise(function (resolve, reject) {
+        if (!isSupportPerformanceObserver()) {
+            if (!isSupportPerformance()) {
+                reject(new Error('浏览器不支持Performance'));
+            }
+            else {
+                // 1. 如果只是支持performance，不支持PerformanceObserver 获取性能值
+                var entry = performance.getEntriesByName(fcp);
+                if (entry && entry.length > 0) {
+                    var fcp_entry = entry[0];
+                    resolve(fcp_entry);
+                }
+                else {
+                    reject(new Error('浏览器不支持FCP'));
+                }
+            }
+        }
+        else {
+            // 浏览值支持FP
+            var entryHandler = function (entry) {
+                if (entry.name === fcp) {
+                    // 断开收集
+                    if (po_1) {
+                        po_1.disconnect();
+                    }
+                    // 获取信息
+                    if (entry.startTime < getFirstHiddenTime().timestamp) {
+                        resolve(entry);
+                    }
+                }
+            };
+            var po_1 = observe(fcp, entryHandler);
+        }
+    });
+};
+/**
+ * 获取LCP指标
+ */
+var getFCP = function () {
+    var _a;
+    (_a = fetchFCP()) === null || _a === void 0 ? void 0 : _a.then(function (entry) {
+        // 创建指标对象
+        initMetric(PerformanceNameType.FCP);
+        toFixedFour(entry.startTime);
+        // 获取到指标对象
+    }).catch(function (error) {
+        logError(error);
+    });
+};
+
+/**
+ * LCP Largest Contentful Paint 最大内容绘制 (LCP)
+ *
+ */
+var lcp = PerformanceNameType.LCP;
+var fetchLCP = function () {
+    // 1.初始化性能参数
+    if (!isSupportPerformanceObserver()) {
+        logWarning("浏览器不支持PerformanceObserver,暂不支持收集FID");
+        return;
+    }
+    // 2. 返回promise
+    return new Promise(function (resolve, reject) {
+        var entryHandler = function (entry) {
+            if (entry.name === lcp) {
+                // 获取信息
+                if (entry.startTime < getFirstHiddenTime().timestamp) {
+                    // 断开收集
+                    if (po) {
+                        po.disconnect();
+                    }
+                    resolve(entry);
+                }
+            }
+        };
+        var po = observe(lcp, entryHandler);
+        if (po) {
+            var stopListening_1 = function () {
+                if (po.takeRecords) {
+                    po.takeRecords().map(entryHandler);
+                }
+                po.disconnect();
+            };
+            ['keydown', 'click'].forEach(function (type) {
+                addEventListener(type, stopListening_1, { once: true, capture: true });
+            });
+            onHidden(stopListening_1, true);
+        }
+    });
+};
+/**
+ * 获取FP指标
+ */
+var getLCP = function () {
+    var _a;
+    (_a = fetchLCP()) === null || _a === void 0 ? void 0 : _a.then(function (entry) {
+        // 创建指标对象
+        initMetric(PerformanceNameType.LCP);
+        toFixedFour(entry.startTime);
+        // 获取到指标对象
+    }).catch(function (error) {
+        logError(error);
+    });
+};
+
+/**
+ * First Input Delay 首次输入延迟 (FID)
+ * FID 测量从用户第一次与页面交互（例如当他们单击链接、点按按钮或使用由 JavaScript 驱动的自定义控件）
+ * 直到浏览器对交互作出响应，并实际能够开始处理事件处理程序所经过的时间。
+ */
+var fid = PerformanceNameType.FID;
+var fetchFID = function () {
+    // 1.初始化性能参数
+    if (!isSupportPerformanceObserver()) {
+        logWarning("浏览器不支持PerformanceObserver,暂不支持收集FID");
+        return;
+    }
+    // 2. 返回promise
+    return new Promise(function (resolve, reject) {
+        var entryHandler = function (entry) {
+            if (entry.name === fid) {
+                // 获取信息
+                if (entry.startTime < getFirstHiddenTime().timestamp) {
+                    // 断开收集
+                    if (po) {
+                        po.disconnect();
+                    }
+                    resolve(entry);
+                }
+            }
+        };
+        var po = observe(fid, entryHandler);
+        if (po) {
+            onHidden(function () {
+                if (po.takeRecords) {
+                    po.takeRecords().map(entryHandler);
+                }
+                po.disconnect();
+            }, true);
+        }
+    });
+};
+/**
+ * 获取LCP指标
+ */
+var getFID = function () {
+    var _a;
+    (_a = fetchFID()) === null || _a === void 0 ? void 0 : _a.then(function (entry) {
+        toFixedFour(entry.processingStart - entry.startTime);
+        // 获取到指标对象
+    }).catch(function (error) {
+        logError(error);
+    });
+};
+
+/**
+ * 作者: lzb
+ * 日期: 2022-04-07 18:12
+ * 功能:
+ */
+/**
+ *  监听性能指标
+ * @param config
+ */
+var startMonitorPerformance = function (config) {
+    if (config === void 0) { config = new Config(); }
+    // 最大内容绘制
+    getLCP();
+    addEventListener("pageShow", function () {
+        // 获取首次渲染的FP
+        getFP();
+        // 获取首次内容绘制
+        getFCP();
+    });
+    domDidLoaded(function () {
+        // 获取FID
+        getFID();
+    });
+};
+
+/**
+ * 作者: lzb
  * 日期: 2022-03-10 11:06
  * 功能:
  */
@@ -309,6 +626,8 @@ var WebPerformance = /** @class */ (function () {
         var _this = this;
         console.log('======开始监听web-performance=========');
         startMonitorBaseInfo(this.config);
+        // 开启性能指标监听
+        startMonitorPerformance(this.config);
         // dom 加载之后
         domDidLoaded(function () {
             startMonitorNavigationTiming(_this.config);

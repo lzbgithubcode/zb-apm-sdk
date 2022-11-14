@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>web-performance</title>
+  </head>
+  <body>
+    <span>我是web-performance</span>
 
-</head>
-<body>
-   <span>我是web-performance</span>
+    <!-- <script src="http://192.168.199.170:3000/packages/web-performance/dist/web-performance.es.js"></script> -->
 
-   <script  src="http://192.168.1.103:3000/packages/web-performance/dist/web-performance.min.js"></script>
+    <script type="module">
+      import { WebPerformance } from "../../packages/web-performance/dist/web-performance.es.js";
+      // import WebPerformance from "ZBApm";
 
-   <script>
-       const p = new ZBApm.WebPerformance({allowLog: true});
-        console.log('我是脚本B',p);
-   </script>
-</body>
+      const p = new WebPerformance({ allowLog: true });
+      //   p.startMonitor();
+      console.log("我是脚本B======", p);
+    </script>
+  </body>
 </html>

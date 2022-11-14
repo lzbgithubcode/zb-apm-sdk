@@ -8,14 +8,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-
   "keywords": [],
   "author": "",
   "license": "ISC",
-   "files": [
-     "dist"
-   ],
-  "devDependencies": {
-
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@zb/apm-types": "workspace: *"
   }
 }

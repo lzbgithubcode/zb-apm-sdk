@@ -2,15 +2,15 @@
   "name": "@zb/apm-types",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "dist/type.js",
   "types": "dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-
+  "dependencies": {
+    "@zb/apm-web-performace": "workspace:^1.0.0"
   }
 }
