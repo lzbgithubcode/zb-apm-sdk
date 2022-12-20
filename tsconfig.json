@@ -2,13 +2,13 @@
   "compilerOptions": {
      "alwaysStrict":  true, // 以严格模式解析并为每个源文件生成 "use strict"语句
      "module": "esnext",  // 当前代码语法
-     "target": "es5", // 编译成什么版本
      "esModuleInterop": true, // js导入ts格式
      "moduleResolution": "node",  // 引入package.json不会报红
      "baseUrl": ".",   // 基础路径
      "listEmittedFiles": true , // 打印出编译后生成文件的名字。
      "listFiles": true,   // 编译过程中打印文件名。
-     "lib": ["esnext", "es6", "dom"],
+     "lib": ["es5", "es6", "esnext","dom"], // 注入的库
+      "target":"es5", // 与lib搭配使用 - 使用babel编译将无效
      "types": ["node"],
       "allowJs": false // 不允许编译javascript文件。
 //      "declaration": true,  // 是否自动创建类型声明文件

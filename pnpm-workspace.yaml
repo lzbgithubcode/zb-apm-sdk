@@ -1,3 +1,5 @@
 packages:
   # 所有在 packages/ 子目录下的 package
   - "packages/*"
+  # 排除所有test子目录
+  - "!**/test/**"

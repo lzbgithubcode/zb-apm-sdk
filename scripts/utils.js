@@ -1,9 +1,3 @@
-/**
- * 作者: lzb
- * 日期: 2022-03-10 15:52
- * 功能: script 脚本工具
- */
-
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
